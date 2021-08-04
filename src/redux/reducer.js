@@ -1,30 +1,61 @@
-import { combineReducers } from "redux";
-import types from "./types";
+//import { combineReducers } from 'redux'
+//import types from './types'
 
-const items = (state = [], { type, payload }) => {
-  switch (type) {
-    case types.ADD:
-      return [...state, payload];
+import { createReducer, combineReducers } from "@reduxjs/toolkit";
+import action from "./action";
 
-    case types.DELETE:
-      return state.filter((contact) => contact.id !== payload);
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+//--------------------------------redux-toolkit
 
-    default:
-      return state;
-  }
-};
+const items = createReducer([], {
+  [action.addContact]: (state, action) => {
+    if (state.some((contact) => contact.name === action.payload.name)) {
+      toast.error(`${action.payload.name} is already in contact`);
+      return;
+    }
 
-const filter = (state = "", { type, payload }) => {
-  switch (type) {
-    case types.CHANGE_FILTER:
-      return payload;
+    return [action.payload, ...state];
+  },
+  [action.deleteContact]: (state, action) =>
+    state.filter((contact) => contact.id !== action.payload),
+});
 
-    default:
-      return state;
-  }
-};
+const filter = createReducer("", {
+  [action.changeFilter]: (state, { payload }) => payload,
+});
 
 export default combineReducers({
   items,
   filter,
 });
+
+//-------------------------------------redux
+
+// const items = (state = [], { type, payload }) => {
+//   switch (type) {
+//     case types.ADD:
+//       return [payload, ...state]
+
+//     case types.DELETE:
+//       return state.filter((contact) => contact.id !== payload)
+
+//     default:
+//       return state
+//   }
+// }
+
+// const filter = (state = '', { type, payload }) => {
+//   switch (type) {
+//     case types.CHANGE_FILTER:
+//       return payload
+
+//     default:
+//       return state
+//   }
+// }
+
+// export default combineReducers({
+//   items,
+//   filter,
+// })

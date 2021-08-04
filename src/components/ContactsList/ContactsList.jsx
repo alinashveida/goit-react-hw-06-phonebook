@@ -31,16 +31,8 @@ const getFilterContacts = (allContacts, filter) => {
   )
 }
 
-// const mapStateToProps = (state) => {
-//   const { filter, items } = state
-
-//   const visibleTodos = getFilterContacts(items, filter)
-
-//   return visibleTodos
-// }
-
-const mapStateToProps = ({ items, filter }) => ({
-  contacts: getFilterContacts(items, filter),
+const mapStateToProps = (state) => ({
+  contacts: getFilterContacts(state.contacts.items, state.contacts.filter),
 })
 
 const mapDispathToProps = (dispatch) => ({
