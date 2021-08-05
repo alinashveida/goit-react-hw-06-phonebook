@@ -4,19 +4,10 @@
 import { createReducer, combineReducers } from "@reduxjs/toolkit";
 import action from "./action";
 
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 //--------------------------------redux-toolkit
 
 const items = createReducer([], {
-  [action.addContact]: (state, action) => {
-    if (state.some((contact) => contact.name === action.payload.name)) {
-      toast.error(`${action.payload.name} is already in contact`);
-      return;
-    }
-
-    return [action.payload, ...state];
-  },
+  [action.addContact]: (state, action) => [action.payload, ...state],
   [action.deleteContact]: (state, action) =>
     state.filter((contact) => contact.id !== action.payload),
 });

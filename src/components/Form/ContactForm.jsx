@@ -3,12 +3,22 @@ import { BsFillPersonFill } from 'react-icons/bs'
 import { AiFillPhone } from 'react-icons/ai'
 import React, { useState } from 'react'
 
-import { connect } from 'react-redux'
+import { connect, useSelector, useDispatch } from 'react-redux'
 import action from '../../redux/action'
+import { getContacts } from '../../redux/selector'
 
-function ContactForm({ onSubmit }) {
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+export default function ContactForm() {
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
+
+  const contacts = useSelector(getContacts)
+
+  const dispatch = useDispatch()
+
+  const onSubmit = (name, number) => dispatch(action.addContact(name, number))
 
   const onChangeInput = (event) => {
     const { value, name } = event.target
@@ -32,6 +42,12 @@ function ContactForm({ onSubmit }) {
   const onSubmitButton = (event) => {
     event.preventDefault()
     console.log(name)
+
+    if (contacts.some((contact) => contact.name === name)) {
+      toast.error(`${name} is already in contact`)
+      reset()
+      return
+    }
 
     onSubmit(name, number)
 
@@ -76,7 +92,7 @@ function ContactForm({ onSubmit }) {
   )
 }
 
-const mapDispathToProps = (dispatch) => ({
-  onSubmit: (name, number) => dispatch(action.addContact(name, number)),
-})
-export default connect(null, mapDispathToProps)(ContactForm)
+// const mapDispathToProps = (dispatch) => ({
+//   onSubmit: (name, number) => dispatch(action.addContact(name, number)),
+// })
+// export default connect(null, mapDispathToProps)(ContactForm)
